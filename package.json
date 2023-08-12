@@ -1,6 +1,6 @@
 {
-    "name": "beta-bot",
-    "version": "1.0.0",
+    "name": "wp-bot",
+    "version": "1.0.0-beta",
     "description": "",
     "main": "src/app.js",
     "scripts": {
@@ -8,11 +8,7 @@
         "dev": "nodemon src/app.js"
     },
     "author": "",
-    "license": "ISC",
-    "bugs": {
-        "url": "https://github.com/Bikashforworkplacenew/Acronym-Bot/issues"
-    },
-    "homepage": "https://github.com/Bikashforworkplacenew/Acronym-Bot#readme",
+    "license": "MIT",
     "dependencies": {
         "@google-cloud/local-auth": "^3.0.0",
         "dotenv": "^16.3.1",
