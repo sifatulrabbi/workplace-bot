@@ -12,7 +12,7 @@ const express = require("express"),
 const config = require("./config/variables.js"),
     graph = require("./utils/graph-client.js")(config),
     // encryption = require("./services/encryption.js")(crypto, config),
-    messages = require("./services/messages.js")(graph),
+    messages = require("./services/messages.js")(graph, config),
     validators = require("./utils/webhook-validators.js")(config),
     gsheet = require("./services/gsheet.js");
 
@@ -26,7 +26,7 @@ app.use(bodyParser.json());
 // app.use(bodyParser.json({ verify: encryption.signCheck }));
 // app.use(express.static("public"));
 app.listen(app.get("port"), () => {
-    console.log("WP Hello app listening on port " + app.get("port") + "!");
+    console.log("WP bot is listening to port :" + app.get("port"));
 });
 
 /* Setup default webhook endpoints */

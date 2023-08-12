@@ -4,4 +4,5 @@ module.exports = {
     APP_SECRET: process.env.APP_SECRET,
     VERIFY_TOKEN: process.env.VERIFY_TOKEN,
     SERVER_URL: process.env.SERVER_URL,
+    BOT_NAME: process.env.BOT_NAME,
 };
