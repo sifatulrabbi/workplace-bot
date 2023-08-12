@@ -10,10 +10,11 @@ const express = require("express"),
 
 /* Loads dependencies */
 const config = require("./config/variables.js"),
+    graph = require("./utils/graph-client.js")(config),
     // encryption = require("./services/encryption.js")(crypto, config),
     messages = require("./services/messages.js")(graph),
     validators = require("./utils/webhook-validators.js")(config),
-    graph = require("./utils/graph-client.js")(config);
+    gsheet = require("./services/gsheet.js");
 
 /* Create express app */
 const app = express();
@@ -24,7 +25,7 @@ app.use(bodyParser.json());
 // app.set("view engine", "ejs");
 // app.use(bodyParser.json({ verify: encryption.signCheck }));
 // app.use(express.static("public"));
-app.listen(app.get("port"), () => {
+app.listen(app.get("port"), async () => {
     console.log("WP Hello app listening on port " + app.get("port") + "!");
 });
 
@@ -34,7 +35,13 @@ validators.setupTokenCheck(app); //set up token validation endpoints
 
 /* Handle webhook payloads from Facebook */
 app.post("/webhook", async (req, res) => {
-    const msgs = messages.getMessages(req);
-    for (const msg of msgs) messages.handleMessage(msg);
-    res.sendStatus(200);
+    try {
+        const responses = await gsheet.getSheetWithSAuth();
+        const msgs = messages.getMessages(req);
+        for (const msg of msgs) await messages.handleMessage(msg, responses);
+        res.sendStatus(200);
+    } catch (err) {
+        console.error(err);
+        res.sendStatus(500);
+    }
 });

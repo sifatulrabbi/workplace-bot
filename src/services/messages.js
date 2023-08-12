@@ -7,7 +7,7 @@ module.exports = (graphApi) => {
      * Get messages sent to the bot by the user
      * @param {import("express").Request} req
      */
-    msgModule.getMessages = function (req) {
+    msgModule.getMessages = function (req, responses) {
         const msgs = [],
             data = req.body;
         // Make sure this is a page subscription
@@ -21,17 +21,24 @@ module.exports = (graphApi) => {
         return msgs;
     };
 
-    //Handle received message
-    msgModule.handleMessage = async function (message) {
+    /**
+     * Handle received message
+     * @param {{sender: {id: string}; message: {text: string}}} message
+     * @param {Array<[key: string, value: string]>} responses
+     */
+    msgModule.handleMessage = async function (message, responses) {
         const senderID = message.sender.id;
-        // getting the message from the user
-        const incoming_message = message.message.text;
-        console.log(incoming_message);
-        this.sendMessage(senderID, "Hello World");
+        const incomingMsg = message.message.text;
+
+        let reply = "No acronym found!";
+        const match = responses.find((r) => r[0] === incomingMsg);
+        if (match) reply = match[1];
+
+        await this.sendMessage(senderID, reply);
     };
 
     //Send message from the bot to the user
-    msgModule.sendMessage = function (recipientId, text) {
+    msgModule.sendMessage = async function (recipientId, text) {
         let messageData = {
             recipient: {
                 id: recipientId,
@@ -41,7 +48,7 @@ module.exports = (graphApi) => {
                 metadata: "DEVELOPER_DEFINED_METADATA",
             },
         };
-        graphApi.callSendAPI(messageData);
+        await graphApi.callSendAPI(messageData);
     };
     return msgModule;
 };
