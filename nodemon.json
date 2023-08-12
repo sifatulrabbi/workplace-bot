@@ -1,0 +1,5 @@
+{
+    "verbose": true,
+    "watch": ["./src/**", ".env", ".env.dev"],
+    "ignore": ["./uploads/**", "./.cache/**", "./tmp/**", ".DS_Store"]
+}

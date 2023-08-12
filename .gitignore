@@ -1,0 +1,6 @@
+*.env
+node_modules
+tmp
+cache
+dist
+*_secret.json
