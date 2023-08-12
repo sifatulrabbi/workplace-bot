@@ -1,5 +1,3 @@
-const serviceAcc = require("../config/gcp_client_secret.json");
-
 module.exports = (graphApi) => {
     const msgModule = {};
 
@@ -7,12 +5,14 @@ module.exports = (graphApi) => {
      * Get messages sent to the bot by the user
      * @param {import("express").Request} req
      */
-    msgModule.getMessages = function (req, responses) {
+    msgModule.getMessages = function (req) {
         const msgs = [],
             data = req.body;
+        require("fs").writeFileSync("tmp/page.json", JSON.stringify(req.body));
         // Make sure this is a page subscription
         if (data.object === "page") {
             for (const pageEntry of data.entry) {
+                if (!pageEntry.messaging) continue;
                 for (const messagingEvent of pageEntry.messaging) {
                     if (messagingEvent.message) msgs.push(messagingEvent);
                 }
@@ -31,7 +31,9 @@ module.exports = (graphApi) => {
         const incomingMsg = message.message.text;
 
         let reply = "No acronym found!";
-        const match = responses.find((r) => r[0] === incomingMsg);
+        const match = responses.find(
+            (r) => r[0].toLowerCase() === incomingMsg.toLowerCase(),
+        );
         if (match) reply = match[1];
 
         await this.sendMessage(senderID, reply);

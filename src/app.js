@@ -25,7 +25,7 @@ app.use(bodyParser.json());
 // app.set("view engine", "ejs");
 // app.use(bodyParser.json({ verify: encryption.signCheck }));
 // app.use(express.static("public"));
-app.listen(app.get("port"), async () => {
+app.listen(app.get("port"), () => {
     console.log("WP Hello app listening on port " + app.get("port") + "!");
 });
 
@@ -42,6 +42,7 @@ app.post("/webhook", async (req, res) => {
         res.sendStatus(200);
     } catch (err) {
         console.error(err);
-        res.sendStatus(500);
+        // res.sendStatus(500);
+        res.sendStatus(200); // sending 200 just for now.
     }
 });
